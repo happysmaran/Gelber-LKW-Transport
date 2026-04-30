@@ -22,6 +22,7 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     background-color: #ffffff;
+    overflow-x: hidden;
 }
 
 /* NAVBAR */
@@ -83,6 +84,8 @@ body {
 
 .nav-link:hover, .nav-link.active { color: var(--primary-dark); }
 
+.nav-actions { display: flex; align-items: center; }
+
 .lang-switcher {
     display: flex;
     background: #eee;
@@ -106,7 +109,11 @@ body {
     color: var(--dark);
 }
 
-.nav-actions { display: flex; align-items: center; }
+.mobile-menu-btn {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
 
 /* BUTTONS */
 .btn-primary, .btn-secondary {
@@ -130,6 +137,11 @@ body {
 .btn-primary:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
+}
+
+.btn-primary.small {
+    padding: 8px 16px;
+    font-size: 0.8rem;
 }
 
 .btn-secondary {
@@ -231,13 +243,13 @@ body {
 }
 .title-underline.left { margin: 15px 0; }
 
-.services-grid, .fleet-grid {
+.services-grid, .fleet-grid, .careers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 }
 
-.service-card, .fleet-card {
+.service-card, .fleet-card, .career-card {
     background: #fff;
     padding: 2.5rem;
     border-radius: 8px;
@@ -246,7 +258,7 @@ body {
     border-top: 4px solid transparent;
 }
 
-.service-card:hover, .fleet-card:hover {
+.service-card:hover, .fleet-card:hover, .career-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     border-top: 4px solid var(--primary);
@@ -258,7 +270,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.service-card h3, .fleet-info h3 {
+.service-card h3, .fleet-info h3, .career-card h3 {
     font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -322,31 +334,32 @@ input:focus, textarea:focus {
 
 .modal-content {
     background: white;
-    padding: 3rem;
+    padding: 2rem;
     border-radius: 8px;
     width: 90%;
-    max-width: 500px;
+    max-width: 650px;
     position: relative;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-.modal-header { text-align: center; margin-bottom: 2rem; }
-.modal-header i { font-size: 3rem; color: var(--primary); margin-bottom: 1rem; }
+.modal-header { text-align: center; margin-bottom: 1.5rem; }
+.modal-header i { font-size: 3rem; color: var(--primary); margin-bottom: 0.5rem; }
 .modal-header h2 { font-weight: 800; color: var(--dark); }
 
 .close {
     position: absolute;
-    top: 15px;
+    top: 10px;
     right: 20px;
     font-size: 2rem;
     cursor: pointer;
     color: #999;
     transition: color 0.3s;
+    z-index: 2001;
 }
 .close:hover { color: var(--dark); }
 
 .tracking-result {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     padding: 1rem;
     background: var(--light-bg);
     border-left: 4px solid var(--primary);
@@ -363,4 +376,203 @@ input:focus, textarea:focus {
 .fade-in.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 992px) {
+    /* 1. Language Selector: Space optimization */
+    .nav-actions {
+        gap: 10px;
+    }
+
+    /* 2. Hero Image: Remove from mobile view per request */
+    .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 80px;
+    }
+    
+    .hero-right {
+        display: none; /* Removes the truck image on mobile */
+    }
+
+    /* 3. Tighten Spacing: Reduced from 100px to 40px */
+    .section {
+        padding: 40px 5%; 
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+    }
+
+    .hero-left {
+        padding: 40px 5%;
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-cta, .hero-stats {
+        justify-content: center;
+        flex-wrap: wrap; /* Prevent clipping */
+    }
+
+    .hero-stats {
+        gap: 1.5rem;
+        padding-top: 1.5rem;
+    }
+
+    /* 4. About Section: Fix width and clipping */
+    .about-grid, .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        width: 100%;
+        overflow: hidden; /* Prevents horizontal scroll */
+    }
+
+    .values {
+        flex-direction: column; /* Stack values vertically to prevent clipping */
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .about-truck {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 5. Tracking Popup: Fix clipping */
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+        margin: 10px;
+        max-height: 90vh;
+        overflow-y: auto; /* Allow scrolling if content is tall */
+    }
+
+    .modal-header i {
+        font-size: 2.2rem;
+    }
+
+    /* Navigation Menu */
+    .desk-only {
+        display: none;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 75px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 75px);
+        background: #fff;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 2rem;
+        transition: 0.4s;
+        box-shadow: 0 10px 10px rgba(0,0,0,0.05);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-cta .btn-primary, 
+    .hero-cta .btn-secondary {
+        width: 100%;
+    }
+
+    .stat-number {
+        font-size: 1.4rem;
+    }
+
+    /* Ensure the logo doesn't push the language/burger off screen */
+    .company-name {
+        font-size: 1.1rem;
+    }
+    .company-tag {
+        font-size: 0.75rem;
+    }
+}
+
+.lang-dropdown {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #eee;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
+
+.lang-dropdown:hover {
+    border-color: var(--primary);
+}
+
+@media (max-width: 992px) {
+    .track-btn {
+        padding: 10px 15px;
+    }
+
+    .track-btn span {
+        display: none;
+    }
+
+    .nav-actions {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .company-name {
+        font-size: 1rem;
+    }
+    .company-tag {
+        display: none;
+    }
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .nav-container {
+        padding: 0.8rem 3%;
+    }
+
+    .nav-container {
+        display: flex;
+        justify-content: space-between; 
+    }
+
+    .nav-actions {
+        gap: 10px;
+    }
+
+    .mobile-menu-btn {
+        margin: 0 10px;
+    }
 }

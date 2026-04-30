@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gelber LKW Transport | Luxemburgische Logistik</title>
+    <!-- Leaflet CSS for Tracking Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -20,21 +22,28 @@
                 </div>
             </div>
             
-            <div class="nav-menu">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
                 <a href="#home" class="nav-link active" data-lang="nav.home">Home</a>
                 <a href="#services" class="nav-link" data-lang="nav.services">Dienstleistungen</a>
                 <a href="#fleet" class="nav-link" data-lang="nav.fleet">Flotte</a>
                 <a href="#about" class="nav-link" data-lang="nav.about">Über uns</a>
+                <a href="#careers" class="nav-link" data-lang="nav.careers">Karriere</a>
                 <a href="#contact" class="nav-link" data-lang="nav.contact">Kontakt</a>
             </div>
             
             <div class="nav-actions">
-                <div class="lang-switcher">
-                    <button onclick="switchLanguage('de')" class="lang-btn active" id="lang-de">DE</button>
-                    <button onclick="switchLanguage('en')" class="lang-btn" id="lang-en">EN</button>
-                    <button onclick="switchLanguage('fr')" class="lang-btn" id="lang-fr">FR</button>
+                <div class="lang-selector-wrapper">
+                    <select id="langSelect" class="lang-dropdown" onchange="switchLanguage(this.value)">
+                        <option value="de">DE</option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                    </select>
                 </div>
-                <button onclick="showTrackingModal()" class="btn-primary track-btn">
+                <button onclick="showTrackingModal()" class="btn-primary track-btn desk-only">
                     <i class="fas fa-truck"></i> <span data-lang="nav.track">Sendung verfolgen</span>
                 </button>
             </div>
@@ -57,7 +66,7 @@
                 <div class="hero-cta">
                     <a href="#services" class="btn-primary large" data-lang="hero.cta1">Dienstleistungen entdecken</a>
                     <button onclick="showTrackingModal()" class="btn-secondary large" data-lang="hero.cta2">
-                        <i class="fas fa-search"></i> Sendung verfolgen
+                        <i class="fas fa-search"></i> <span data-lang="nav.track">Sendung verfolgen</span>
                     </button>
                 </div>
                 
@@ -128,7 +137,7 @@
     </section>
 
     <!-- FLEET -->
-    <section id="fleet" class="section fleet-section">
+    <section id="fleet" class="section fleet-section bg-light">
         <div class="section-header fade-in">
             <h2 data-lang="fleet.title">Unsere Flotte</h2>
             <div class="title-underline"></div>
@@ -161,7 +170,7 @@
     </section>
 
     <!-- ABOUT -->
-    <section id="about" class="section about-section bg-light">
+    <section id="about" class="section about-section">
         <div class="about-grid">
             <div class="about-text fade-in">
                 <h2 data-lang="about.title">Über Gelber LKW Transport</h2>
@@ -185,6 +194,27 @@
             </div>
             <div class="about-image fade-in">
                 <img src="attachments/ets2_20260430_132700_00.png.jpg" alt="Gelber LKW vor Depot" class="about-truck">
+            </div>
+        </div>
+    </section>
+
+    <!-- CAREERS -->
+    <section id="careers" class="section careers-section bg-light">
+        <div class="section-header fade-in">
+            <h2 data-lang="careers.title">Karriere bei uns</h2>
+            <div class="title-underline"></div>
+            <p data-lang="careers.subtitle">Werden Sie Teil unseres wachsenden Teams</p>
+        </div>
+        <div class="careers-grid fade-in">
+            <div class="career-card">
+                <h3 data-lang="careers.job1_title">Fernfahrer (m/w/d) CE</h3>
+                <p data-lang="careers.job1_desc">Einsatz im internationalen Fernverkehr mit modernen Scania-Fahrzeugen.</p>
+                <a href="#contact" class="btn-primary small" data-lang="careers.apply">Jetzt bewerben</a>
+            </div>
+            <div class="career-card">
+                <h3 data-lang="careers.job2_title">Disponent (m/w/d)</h3>
+                <p data-lang="careers.job2_desc">Planung und Steuerung unserer Flotte am Standort Windhof.</p>
+                <a href="#contact" class="btn-primary small" data-lang="careers.apply">Jetzt bewerben</a>
             </div>
         </div>
     </section>
@@ -251,12 +281,17 @@
             <div class="tracking-form-group">
                 <input type="text" id="modal-tracking-number" placeholder="GLK-20260430-837291" class="modal-input">
                 <br><br>
-                <button onclick="trackShipmentModal()" class="btn-primary full-width">Verfolgen</button>
+                <button onclick="trackShipmentModal()" class="btn-primary full-width" data-lang="tracking.btn">Verfolgen</button>
             </div>
-            <div id="modal-tracking-result" class="tracking-result hidden"></div>
+            <div id="modal-tracking-result" class="tracking-result hidden">
+                <div id="tracking-status-info"></div>
+                <div id="trackingMap" style="height: 300px; width: 100%; margin-top: 15px; border-radius: 8px;"></div>
+            </div>
         </div>
     </div>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

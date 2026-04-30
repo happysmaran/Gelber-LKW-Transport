@@ -1,6 +1,6 @@
-// script.js
-
 let currentLang = 'de';
+let trackingMap = null;
+let currentMarker = null;
 
 const translations = {
     de: {
@@ -8,6 +8,7 @@ const translations = {
         "nav.services": "Dienstleistungen",
         "nav.fleet": "Flotte",
         "nav.about": "Über uns",
+        "nav.careers": "Karriere",
         "nav.contact": "Kontakt",
         "nav.track": "Verfolgen",
         "hero.title": "Ihr zuverlässiger Partner für <span class='highlight'>professionelle Logistik</span>",
@@ -32,6 +33,13 @@ const translations = {
         "fleet.scania": "Euro 6 – 650 PS • Mit modernster Sicherheitsausstattung",
         "fleet.longhaul": "Bis 34m Länge • Hohe Ladekapazität",
         "fleet.regional": "Flexible Einsätze in Benelux und Deutschland",
+        "careers.title": "Karriere bei uns",
+        "careers.subtitle": "Werden Sie Teil unseres wachsenden Teams",
+        "careers.job1_title": "Fernfahrer (m/w/d) CE",
+        "careers.job1_desc": "Einsatz im internationalen Fernverkehr mit modernen Scania-Fahrzeugen.",
+        "careers.job2_title": "Disponent (m/w/d)",
+        "careers.job2_desc": "Planung und Steuerung unserer Flotte am Standort Windhof.",
+        "careers.apply": "Jetzt bewerben",
         "about.title": "Über Gelber LKW Transport",
         "about.p1": "Als luxemburgisches Familienunternehmen mit über 15 Jahren Erfahrung in der Logistikbranche stehen wir für Zuverlässigkeit, Präzision und Nachhaltigkeit.",
         "about.value1": "Nachhaltigkeit",
@@ -46,6 +54,8 @@ const translations = {
         "contact.message": "Ihre Nachricht",
         "contact.submit": "Nachricht Senden",
         "tracking.modal_title": "Sendung verfolgen",
+        "tracking.btn": "Verfolgen",
+        "tracking.status": "Status: Auf dem Weg (Nähe {loc})",
         "footer.allrights": "Alle Rechte vorbehalten"
     },
     en: {
@@ -53,6 +63,7 @@ const translations = {
         "nav.services": "Services",
         "nav.fleet": "Fleet",
         "nav.about": "About",
+        "nav.careers": "Careers",
         "nav.contact": "Contact",
         "nav.track": "Track",
         "hero.title": "Your Reliable Partner for <span class='highlight'>Professional Logistics</span>",
@@ -77,6 +88,13 @@ const translations = {
         "fleet.scania": "Euro 6 – 650 HP • With state-of-the-art safety equipment",
         "fleet.longhaul": "Up to 34m length • High load capacity",
         "fleet.regional": "Flexible operations in Benelux and Germany",
+        "careers.title": "Careers",
+        "careers.subtitle": "Join our growing international team",
+        "careers.job1_title": "Truck Driver (m/f/d) CE",
+        "careers.job1_desc": "Deployment in international long-distance transport with modern Scania vehicles.",
+        "careers.job2_title": "Dispatcher (m/f/d)",
+        "careers.job2_desc": "Planning and management of our fleet at the Windhof location.",
+        "careers.apply": "Apply Now",
         "about.title": "About Gelber LKW Transport",
         "about.p1": "As a Luxembourg-based family business with over 15 years of experience in the logistics industry, we stand for reliability, precision, and sustainability.",
         "about.value1": "Sustainability",
@@ -91,6 +109,8 @@ const translations = {
         "contact.message": "Your Message",
         "contact.submit": "Send Message",
         "tracking.modal_title": "Track Shipment",
+        "tracking.btn": "Track",
+        "tracking.status": "Status: In Transit (Near {loc})",
         "footer.allrights": "All rights reserved"
     },
     fr: {
@@ -98,6 +118,7 @@ const translations = {
         "nav.services": "Services",
         "nav.fleet": "Flotte",
         "nav.about": "À Propos",
+        "nav.careers": "Carrières",
         "nav.contact": "Contact",
         "nav.track": "Suivre",
         "hero.title": "Votre partenaire fiable pour une <span class='highlight'>logistique professionnelle</span>",
@@ -122,6 +143,13 @@ const translations = {
         "fleet.scania": "Euro 6 – 650 CH • Équipements de sécurité de pointe",
         "fleet.longhaul": "Jusqu'à 34m de long • Grande capacité de charge",
         "fleet.regional": "Opérations flexibles au Benelux et en Allemagne",
+        "careers.title": "Carrières",
+        "careers.subtitle": "Rejoignez notre équipe internationale",
+        "careers.job1_title": "Chauffeur (h/f/d) CE",
+        "careers.job1_desc": "Déploiement dans le transport international longue distance avec des véhicules Scania modernes.",
+        "careers.job2_title": "Dispatcheur (h/f/d)",
+        "careers.job2_desc": "Planification et gestion de notre flotte sur le site de Windhof.",
+        "careers.apply": "Postuler maintenant",
         "about.title": "À Propos de Gelber LKW Transport",
         "about.p1": "En tant qu'entreprise familiale luxembourgeoise avec plus de 15 ans d'expérience, nous sommes synonymes de fiabilité, de précision et de durabilité.",
         "about.value1": "Durabilité",
@@ -136,6 +164,8 @@ const translations = {
         "contact.message": "Votre message",
         "contact.submit": "Envoyer le message",
         "tracking.modal_title": "Suivre un envoi",
+        "tracking.btn": "Suivre",
+        "tracking.status": "Statut: En transit (Proche de {loc})",
         "footer.allrights": "Tous droits réservés"
     }
 };
@@ -158,76 +188,96 @@ function switchLanguage(lang) {
     });
 }
 
+function initTrackingMap() {
+    if (trackingMap) return;
+    trackingMap = L.map('trackingMap').setView([49.6116, 6.1319], 5);
+    // SWITCHED TO CARTODB (POSITRON) TO FIX ACCESS BLOCKED ERROR
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    }).addTo(trackingMap);
+}
+
 function showTrackingModal() {
     document.getElementById('trackingModal').style.display = 'flex';
+    setTimeout(() => {
+        initTrackingMap();
+        trackingMap.invalidateSize();
+    }, 100);
 }
 
 function hideTrackingModal() {
     document.getElementById('trackingModal').style.display = 'none';
     document.getElementById('modal-tracking-result').classList.add('hidden');
     document.getElementById('modal-tracking-number').value = '';
+    if (currentMarker) {
+        trackingMap.removeLayer(currentMarker);
+        currentMarker = null;
+    }
 }
 
 function trackShipmentModal() {
     const num = document.getElementById('modal-tracking-number').value.trim();
-    const result = document.getElementById('modal-tracking-result');
+    const resultArea = document.getElementById('modal-tracking-result');
+    const infoText = document.getElementById('tracking-status-info');
     
-    // Multi-lang status responses
-    const statusMsg = currentLang === 'en' ? "Status: In Transit" : 
-                      currentLang === 'fr' ? "Statut: En transit" : 
-                      "Status: Auf dem Weg";
-    const errorMsg = currentLang === 'en' ? "Please enter a tracking number." : 
-                     currentLang === 'fr' ? "Veuillez entrer un numéro de suivi." : 
-                     "Bitte Nummer eingeben.";
-
-    if(num) {
-        result.innerHTML = `<p><strong>${num}</strong><br><span style="color:var(--secondary); font-weight: bold;">${statusMsg}</span></p>`;
-    } else {
-        result.innerHTML = `<p style="color:var(--secondary);">${errorMsg}</p>`;
+    if(!num) {
+        alert(currentLang === 'en' ? "Please enter a tracking number." : "Bitte Nummer eingeben.");
+        return;
     }
-    result.classList.remove('hidden');
+
+    const locations = [
+        { name: "Windhof, LU", lat: 49.645, lng: 5.958 },
+        { name: "Paris, FR", lat: 48.856, lng: 2.352 },
+        { name: "Berlin, DE", lat: 52.520, lng: 13.404 },
+        { name: "Brussels, BE", lat: 50.850, lng: 4.351 }
+    ];
+
+    const randomLoc = locations[Math.floor(Math.random() * locations.length)];
+    
+    // FETCH TRANSLATED STATUS STRING
+    let statusTemplate = translations[currentLang]["tracking.status"];
+    let statusMsg = statusTemplate.replace("{loc}", randomLoc.name);
+
+    infoText.innerHTML = `<p><strong>ID: ${num}</strong><br><span style="color:var(--primary-dark); font-weight: bold;">${statusMsg}</span></p>`;
+    
+    if (currentMarker) trackingMap.removeLayer(currentMarker);
+    currentMarker = L.marker([randomLoc.lat, randomLoc.lng]).addTo(trackingMap);
+    trackingMap.flyTo([randomLoc.lat, randomLoc.lng], 8);
+    
+    resultArea.classList.remove('hidden');
+    trackingMap.invalidateSize();
 }
 
-// Init & Smooth Views Logic
 document.addEventListener('DOMContentLoaded', () => {
+    // Mobile Menu Toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
     
+    mobileBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        const icon = mobileBtn.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    });
+
     // Form handling
     document.getElementById('contactForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const msg = currentLang === 'en' ? "Thank you! Your message has been sent." : 
-                    currentLang === 'fr' ? "Merci ! Votre message a été envoyé." : 
-                    "Vielen Dank! Ihre Nachricht wurde gesendet.";
-        alert(msg);
+        alert("Success!");
         this.reset();
     });
 
-    // Close modal on outside click
-    window.onclick = function(event) {
-        let modal = document.getElementById('trackingModal');
-        if (event.target == modal) {
-            hideTrackingModal();
-        }
-    }
-
-    // Intersection Observer for Smooth Fade-in Views
-    const observerOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
+    // Fade-in Observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target); // Only animate once
+                observer.unobserve(entry.target); 
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.15 });
 
-    document.querySelectorAll('.fade-in').forEach(element => {
-        observer.observe(element);
-    });
+    document.querySelectorAll('.fade-in').forEach(element => observer.observe(element));
 
-    // Set initial language
     switchLanguage('de');
 });
