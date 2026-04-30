@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelber LKW Transport | Luxemburgische Logistik</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="attachments/logo.png" alt="Gelber LKW Logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="company-name">GELBER LKW</span>
+                    <span class="company-tag">TRANSPORT</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active" data-lang="nav.home">Home</a>
+                <a href="#services" class="nav-link" data-lang="nav.services">Dienstleistungen</a>
+                <a href="#fleet" class="nav-link" data-lang="nav.fleet">Flotte</a>
+                <a href="#about" class="nav-link" data-lang="nav.about">Über uns</a>
+                <a href="#contact" class="nav-link" data-lang="nav.contact">Kontakt</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="lang-switcher">
+                    <button onclick="switchLanguage('de')" class="lang-btn active" id="lang-de">DE</button>
+                    <button onclick="switchLanguage('en')" class="lang-btn" id="lang-en">EN</button>
+                    <button onclick="switchLanguage('fr')" class="lang-btn" id="lang-fr">FR</button>
+                </div>
+                <button onclick="showTrackingModal()" class="btn-primary track-btn">
+                    <i class="fas fa-truck"></i> <span data-lang="nav.track">Sendung verfolgen</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header id="home" class="hero fade-in">
+        <div class="hero-left">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge">LUXEMBOURG • EU • SINCE 2010</span>
+                </div>
+                <h1 data-lang="hero.title">Ihr zuverlässiger Partner für <span class="highlight">professionelle Logistik</span></h1>
+                <p data-lang="hero.subtitle" class="hero-subtitle">
+                    Gelber LKW Transport – Schnell. Sicher. Nachhaltig.<br>
+                    Von Luxemburg in die ganze Welt.
+                </p>
+                
+                <div class="hero-cta">
+                    <a href="#services" class="btn-primary large" data-lang="hero.cta1">Dienstleistungen entdecken</a>
+                    <button onclick="showTrackingModal()" class="btn-secondary large" data-lang="hero.cta2">
+                        <i class="fas fa-search"></i> Sendung verfolgen
+                    </button>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">150+</span>
+                        <span class="stat-label" data-lang="hero.stat1">Fahrzeuge</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label" data-lang="hero.stat2">Support</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label" data-lang="hero.stat3">Länder</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-right">
+            <img src="attachments/ets2_20260430_135949_00.png.jpg" alt="Gelber LKW Scania" class="hero-truck">
+            <div class="hero-overlay"></div>
+        </div>
+    </header>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+        <div class="section-header fade-in">
+            <h2 data-lang="services.title">Unsere Dienstleistungen</h2>
+            <div class="title-underline"></div>
+            <p data-lang="services.subtitle">Maßgeschneiderte Logistiklösungen für jeden Bedarf</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3 data-lang="services.road">Straßentransport</h3>
+                <p data-lang="services.road_desc">Nationaler und internationaler Transport mit unserer modernen LKW-Flotte.</p>
+            </div>
+            
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-ship"></i>
+                </div>
+                <h3 data-lang="services.sea">Seefracht &amp; Multimodal</h3>
+                <p data-lang="services.sea_desc">Kombinierte Transportlösungen über Straße, Schiene und Meer.</p>
+            </div>
+            
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <h3 data-lang="services.warehouse">Lagerung &amp; Fulfillment</h3>
+                <p data-lang="services.warehouse_desc">Moderne Lagerflächen in Luxemburg mit Temperaturkontrolle.</p>
+            </div>
+            
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3 data-lang="services.global">Internationale Logistik</h3>
+                <p data-lang="services.global_desc">Von Luxemburg nach Europa und weltweit – mit Zollabwicklung.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLEET -->
+    <section id="fleet" class="section fleet-section">
+        <div class="section-header fade-in">
+            <h2 data-lang="fleet.title">Unsere Flotte</h2>
+            <div class="title-underline"></div>
+            <p data-lang="fleet.subtitle">Moderne, umweltfreundliche Fahrzeuge für höchste Zuverlässigkeit</p>
+        </div>
+        
+        <div class="fleet-grid">
+            <div class="fleet-card fade-in">
+                <img src="attachments/ets2_20260430_132750_00.png" alt="Gelber LKW Trailer" class="fleet-img">
+                <div class="fleet-info">
+                    <h3>Scania S-Serie</h3>
+                    <p data-lang="fleet.scania">Euro 6 – 650 PS • Mit modernster Sicherheitsausstattung</p>
+                </div>
+            </div>
+            <div class="fleet-card fade-in">
+                <img src="attachments/ets2_20260430_132416_00.png.jpg" alt="Gelber LKW auf Autobahn" class="fleet-img">
+                <div class="fleet-info">
+                    <h3>Langstrecken-Kombinationen</h3>
+                    <p data-lang="fleet.longhaul">Bis 34m Länge • Hohe Ladekapazität</p>
+                </div>
+            </div>
+            <div class="fleet-card fade-in">
+                <img src="attachments/map.png" alt="Gelber LKW im Wald" class="fleet-img">
+                <div class="fleet-info">
+                    <h3>Regional &amp; Express</h3>
+                    <p data-lang="fleet.regional">Flexible Einsätze in Benelux und Deutschland</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section about-section bg-light">
+        <div class="about-grid">
+            <div class="about-text fade-in">
+                <h2 data-lang="about.title">Über Gelber LKW Transport</h2>
+                <div class="title-underline left"></div>
+                <p data-lang="about.p1">Als luxemburgisches Familienunternehmen mit über 15 Jahren Erfahrung in der Logistikbranche stehen wir für Zuverlässigkeit, Präzision und Nachhaltigkeit.</p>
+                
+                <div class="values">
+                    <div class="value-item">
+                        <i class="fas fa-leaf"></i>
+                        <span data-lang="about.value1">Nachhaltigkeit</span>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span data-lang="about.value2">Sicherheit</span>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-clock"></i>
+                        <span data-lang="about.value3">Pünktlichkeit</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image fade-in">
+                <img src="attachments/ets2_20260430_132700_00.png.jpg" alt="Gelber LKW vor Depot" class="about-truck">
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section contact-section">
+        <div class="contact-grid">
+            <div class="contact-info fade-in">
+                <h2 data-lang="contact.title">Kontaktieren Sie uns</h2>
+                <div class="title-underline left"></div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong data-lang="contact.address">Hauptsitz</strong><br>
+                        12 Rue de l'Industrie<br>L-8399 Windhof, Luxemburg
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <strong data-lang="contact.phone">Telefon</strong><br>+352 28 99 77 00
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <strong data-lang="contact.email">E-Mail</strong><br>info@gelber-lkw-transport.de
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form fade-in">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" placeholder="Name" data-lang="contact.name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="E-Mail" data-lang="contact.email_ph" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Nachricht" rows="5" data-lang="contact.message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary full-width" data-lang="contact.submit">Senden</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>© 2026 Gelber LKW Transport S.à r.l. • Windhof, Luxemburg • <span data-lang="footer.allrights">Alle Rechte vorbehalten</span></p>
+        </div>
+    </footer>
+
+    <!-- TRACKING MODAL -->
+    <div id="trackingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideTrackingModal()">×</span>
+            <div class="modal-header">
+                <i class="fas fa-truck-fast"></i>
+                <h2 data-lang="tracking.modal_title">Sendung verfolgen</h2>
+            </div>
+            <div class="tracking-form-group">
+                <input type="text" id="modal-tracking-number" placeholder="GLK-20260430-837291" class="modal-input">
+                <br><br>
+                <button onclick="trackShipmentModal()" class="btn-primary full-width">Verfolgen</button>
+            </div>
+            <div id="modal-tracking-result" class="tracking-result hidden"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
