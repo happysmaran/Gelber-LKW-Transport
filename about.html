@@ -3,162 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flotte | Gelber LKW Transport</title>
+    <title>Über uns | Gelber LKW Transport</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" href="attachments/logo.png" type="image/png">
-    <style>
-        .page-hero {
-            background: var(--dark);
-            padding: 140px 5% 80px;
-            text-align: center;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
-        .page-hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                45deg, transparent, transparent 40px,
-                rgba(245,166,35,0.03) 40px, rgba(245,166,35,0.03) 80px
-            );
-        }
-        .page-hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; position: relative; }
-        .page-hero p { font-size: 1.2rem; color: #aaa; max-width: 600px; margin: 0 auto; position: relative; }
-        .page-hero .highlight { color: var(--primary); }
-
-        /* FLEET STATS BAR */
-        .fleet-stats-bar {
-            background: var(--primary);
-            padding: 30px 5%;
-        }
-        .fleet-stats-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .fleet-stat-item { text-align: center; }
-        .fleet-stat-item .num { font-size: 2.5rem; font-weight: 800; color: var(--dark); display: block; }
-        .fleet-stat-item .lbl { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: rgba(0,0,0,0.6); letter-spacing: 1px; }
-
-        /* VEHICLE SHOWCASE */
-        .vehicle-showcase {
-            padding: 80px 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .vehicle-showcase h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .vehicle-card {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 3rem;
-            background: #fff;
-            border: 1px solid #eee;
-        }
-        .vehicle-card.reverse { direction: rtl; }
-        .vehicle-card.reverse > * { direction: ltr; }
-
-        .vehicle-img-wrap { position: relative; overflow: hidden; min-height: 320px; }
-        .vehicle-img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        .vehicle-card:hover .vehicle-img-wrap img { transform: scale(1.04); }
-
-        .vehicle-badge {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: var(--primary);
-            color: var(--dark);
-            font-weight: 800;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 6px 14px;
-            border-radius: 4px;
-        }
-
-        .vehicle-info {
-            padding: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .vehicle-info h3 { font-size: 1.8rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
-        .vehicle-info .vehicle-sub { color: var(--accent-grey); font-size: 0.95rem; margin-bottom: 1.5rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-        .vehicle-info p { color: #555; line-height: 1.8; margin-bottom: 1.5rem; }
-
-        .vehicle-specs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        .spec-item {
-            background: var(--light-bg);
-            padding: 12px 16px;
-            border-radius: 6px;
-        }
-        .spec-item .spec-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--accent-grey); letter-spacing: 0.5px; }
-        .spec-item .spec-value { font-size: 1rem; font-weight: 800; color: var(--dark); margin-top: 2px; }
-
-        /* STANDARDS */
-        .standards-section {
-            background: var(--light-bg);
-            padding: 80px 5%;
-        }
-        .standards-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .standards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        .standard-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--primary);
-        }
-        .standard-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; display: block; }
-        .standard-card h4 { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
-        .standard-card p { font-size: 0.9rem; color: #666; }
-
-        @media (max-width: 992px) {
-            .vehicle-card { grid-template-columns: 1fr; }
-            .vehicle-card.reverse { direction: ltr; }
-            .vehicle-img-wrap { min-height: 240px; }
-            .vehicle-info { padding: 2rem; }
-            .page-hero h1 { font-size: 2.2rem; }
-        }
-        @media (max-width: 600px) {
-            .vehicle-specs { grid-template-columns: 1fr; }
-        }
-    </style>
 </head>
 <body>
     <!-- NAVBAR -->
@@ -175,8 +25,8 @@
             <div class="nav-menu" id="navMenu">
                 <a href="index.html" class="nav-link" data-lang="nav.home">Home</a>
                 <a href="services.html" class="nav-link" data-lang="nav.services">Dienstleistungen</a>
-                <a href="fleet.html" class="nav-link active" data-lang="nav.fleet">Flotte</a>
-                <a href="about.html" class="nav-link" data-lang="nav.about">Über uns</a>
+                <a href="fleet.html" class="nav-link" data-lang="nav.fleet">Flotte</a>
+                <a href="about.html" class="nav-link active" data-lang="nav.about">Über uns</a>
                 <a href="careers.html" class="nav-link" data-lang="nav.careers">Karriere</a>
                 <a href="contact.html" class="nav-link" data-lang="nav.contact">Kontakt</a>
             </div>
@@ -197,166 +47,71 @@
 
     <!-- PAGE HERO -->
     <div class="page-hero">
-        <h1 data-lang="fleet.title">Unsere <span class="highlight">Flotte</span></h1>
-        <p data-lang="fleet.subtitle">Moderne, umweltfreundliche Fahrzeuge für höchste Zuverlässigkeit</p>
+        <h1 data-lang="about.title">Über Gelber LKW Transport</h1>
+        <p data-lang="about.p1">Als luxemburgisches Familienunternehmen mit über 15 Jahren Erfahrung stehen wir für Zuverlässigkeit, Präzision und Nachhaltigkeit.</p>
     </div>
 
-    <!-- STATS BAR -->
-    <div class="fleet-stats-bar">
-        <div class="fleet-stats-inner">
-            <div class="fleet-stat-item">
-                <span class="num">150+</span>
-                <span class="lbl" data-lang="fleet.stat_vehicles">Fahrzeuge</span>
-            </div>
-            <div class="fleet-stat-item">
-                <span class="num">Euro 6</span>
-                <span class="lbl" data-lang="fleet.stat_standard">Emissionsstandard</span>
-            </div>
-            <div class="fleet-stat-item">
-                <span class="num">650 PS</span>
-                <span class="lbl" data-lang="fleet.stat_power">Max. Motorleistung</span>
-            </div>
-            <div class="fleet-stat-item">
-                <span class="num">34m</span>
-                <span class="lbl" data-lang="fleet.stat_length">Max. Zuglänge</span>
-            </div>
-            <div class="fleet-stat-item">
-                <span class="num">2022+</span>
-                <span class="lbl" data-lang="fleet.stat_year">Baujahr</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- VEHICLE SHOWCASE -->
-    <div class="vehicle-showcase">
-
-        <!-- Scania S-Serie -->
-        <div class="vehicle-card fade-in">
-            <div class="vehicle-img-wrap">
-                <img src="attachments/ets2_20260430_135949_00.png.jpg" alt="Scania S-Serie">
-                <div class="vehicle-badge">Flaggschiff</div>
-            </div>
-            <div class="vehicle-info">
-                <h3>Scania S-Serie</h3>
-                <div class="vehicle-sub" data-lang="fleet.scania_sub">Fernverkehr • Klasse CE</div>
-                <p data-lang="fleet.scania_desc">Unser Arbeitstier für den internationalen Fernverkehr. Die Scania S-Serie vereint maximale Fahrerzufriedenheit mit höchster Effizienz. Ausgestattet mit dem neuesten Sicherheitspaket und Telematik.</p>
-                <div class="vehicle-specs">
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_engine">Motor</div>
-                        <div class="spec-value">650 PS</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_emission">Norm</div>
-                        <div class="spec-value">Euro 6</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_payload">Zuladung</div>
-                        <div class="spec-value">~24 t</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_cabin">Kabine</div>
-                        <div class="spec-value">Highline</div>
-                    </div>
+    <!-- STORY -->
+    <section class="story-section">
+        <div class="story-grid">
+            <div class="story-content fade-in">
+                <h2 data-lang="about.title">Unsere Geschichte</h2>
+                <div class="title-underline left"></div>
+                <p data-lang="about.p1">Seit unserer Gründung im Jahr 2010 in Windhof haben wir uns zu einem der führenden Logistikdienstleister in der Region Luxemburg entwickelt.</p>
+                <p data-lang="about.p2">Was als kleines Transportunternehmen mit drei Fahrzeugen begann, ist heute eine internationale Flotte von über 150 modernen Scania-LKW, die täglich Waren quer durch Europa bewegen.</p>
+                <div class="values">
+                    <div class="value-item"><i class="fas fa-leaf"></i> <span data-lang="about.value1">Nachhaltigkeit</span></div>
+                    <div class="value-item"><i class="fas fa-shield-alt"></i> <span data-lang="about.value2">Sicherheit</span></div>
+                    <div class="value-item"><i class="fas fa-clock"></i> <span data-lang="about.value3">Pünktlichkeit</span></div>
                 </div>
             </div>
-        </div>
-
-        <!-- Langstrecken Kombi -->
-        <div class="vehicle-card reverse fade-in">
-            <div class="vehicle-img-wrap">
-                <img src="attachments/ets2_20260430_132416_00.png.jpg" alt="Langstrecken-Kombination">
-                <div class="vehicle-badge" data-lang="fleet.badge_longhaul">Langstrecke</div>
+            <div class="story-image fade-in">
+                <img src="attachments/ets2_20260430_132700_00.png.jpg" alt="Unser Depot in Windhof">
             </div>
-            <div class="vehicle-info">
-                <h3 data-lang="fleet.longhaul_title">Langstrecken-Kombinationen</h3>
-                <div class="vehicle-sub" data-lang="fleet.longhaul_sub">Hochvolumen • Übermaß</div>
-                <p data-lang="fleet.longhaul_desc">Für Ladungen, die mehr Platz brauchen. Unsere Langstrecken-Kombinationen sind auf maximale Ladekapazität ausgelegt — ideal für Übermaßtransporte, Coils und schwere Güter.</p>
-                <div class="vehicle-specs">
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_length">Länge</div>
-                        <div class="spec-value">bis 34 m</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_volume">Volumen</div>
-                        <div class="spec-value">120+ m³</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_payload">Zuladung</div>
-                        <div class="spec-value">~40 t</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_emission">Norm</div>
-                        <div class="spec-value">Euro 6</div>
-                    </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="timeline-section">
+        <div class="section-header fade-in">
+            <h2 data-lang="about.timeline">Meilensteine</h2>
+            <div class="title-underline"></div>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2010</div>
+                <div class="timeline-text">
+                    <h4 data-lang="about.milestone1">Gründung</h4>
+                    <p data-lang="about.milestone1_desc">Start des Betriebs in Windhof mit Fokus auf regionale Transporte.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2015</div>
+                <div class="timeline-text">
+                    <h4 data-lang="about.milestone2">Expansion EU</h4>
+                    <p data-lang="about.milestone2_desc">Erweiterung der Flotte auf 50 Fahrzeuge und Start des Fernverkehrs nach DE, FR und BE.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2020</div>
+                <div class="timeline-text">
+                    <h4 data-lang="about.milestone3">Nachhaltigkeits-Offensive</h4>
+                    <p data-lang="about.milestone3_desc">Umstellung der kompletten Flotte auf Euro 6 Standard und Einführung von Smart-Tracking.</p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2026</div>
+                <div class="timeline-text">
+                    <h4 data-lang="about.milestone4">Heute</h4>
+                    <p data-lang="about.milestone4_desc">Über 150 Fahrzeuge und ein starkes Team von Logistikexperten für weltweite Lösungen.</p>
                 </div>
             </div>
         </div>
-
-        <!-- Regional Trailer -->
-        <div class="vehicle-card fade-in">
-            <div class="vehicle-img-wrap">
-                <img src="attachments/ets2_20260430_132750_00.png" alt="Regional & Express">
-                <div class="vehicle-badge" data-lang="fleet.badge_regional">Regional</div>
-            </div>
-            <div class="vehicle-info">
-                <h3 data-lang="fleet.regional_title">Regional & Express</h3>
-                <div class="vehicle-sub" data-lang="fleet.regional_sub">Benelux • Deutschland • Frankreich</div>
-                <p data-lang="fleet.regional_desc">Flexibel, wendig und immer pünktlich. Unsere Regionalflotte ist speziell für den schnellen Einsatz im Benelux-Raum und Deutschland konzipiert — mit täglichen Touren ab Windhof.</p>
-                <div class="vehicle-specs">
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_radius">Aktionsradius</div>
-                        <div class="spec-value">600 km</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_turnaround">Umlaufzeit</div>
-                        <div class="spec-value">24h</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_payload">Zuladung</div>
-                        <div class="spec-value">~18 t</div>
-                    </div>
-                    <div class="spec-item">
-                        <div class="spec-label" data-lang="fleet.spec_emission">Norm</div>
-                        <div class="spec-value">Euro 6</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- STANDARDS -->
-    <div class="standards-section">
-        <div class="standards-inner">
-            <div class="section-header fade-in">
-                <h2 data-lang="fleet.standards_title">Unsere Flottenstandards</h2>
-                <div class="title-underline"></div>
-                <p data-lang="fleet.standards_sub">Jedes Fahrzeug in unserer Flotte erfüllt die höchsten Sicherheits- und Umweltstandards</p>
-            </div>
-            <div class="standards-grid">
-                <div class="standard-card fade-in">
-                    <i class="fas fa-shield-alt"></i>
-                    <h4 data-lang="fleet.std1_title">Sicherheitssysteme</h4>
-                    <p data-lang="fleet.std1_desc">Alle Fahrzeuge mit ABS, ESP, Spurhalteassistent, Notbremsassistent und Abstandsregeltempomat.</p>
-                </div>
-                <div class="standard-card fade-in">
-                    <i class="fas fa-satellite"></i>
-                    <h4 data-lang="fleet.std2_title">GPS-Telematik</h4>
-                    <p data-lang="fleet.std2_desc">Echtzeit-Tracking aller Fahrzeuge. Digitaler Tachograph und Fernwartung per Satellit.</p>
-                </div>
-                <div class="standard-card fade-in">
-                    <i class="fas fa-leaf"></i>
-                    <h4 data-lang="fleet.std3_title">Euro 6 Norm</h4>
-                    <p data-lang="fleet.std3_desc">Gesamte Flotte erfüllt Euro 6 Standard — deutlich unter den Grenzwerten für NOx und PM.</p>
-                </div>
-                <div class="standard-card fade-in">
-                    <i class="fas fa-wrench"></i>
-                    <h4 data-lang="fleet.std4_title">Regelmäßige Wartung</h4>
-                    <p data-lang="fleet.std4_desc">Jedes Fahrzeug durchläuft alle 30.000 km eine vollständige Inspektion in unserem Werkstatt in Windhof.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -393,9 +148,8 @@
             const navMenu = document.getElementById('navMenu');
             mobileBtn.addEventListener('click', () => {
                 navMenu.classList.toggle('active');
-                const icon = mobileBtn.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
+                mobileBtn.querySelector('i').classList.toggle('fa-bars');
+                mobileBtn.querySelector('i').classList.toggle('fa-times');
             });
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
