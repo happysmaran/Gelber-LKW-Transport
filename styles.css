@@ -571,3 +571,44 @@ input:focus, textarea:focus {
         margin: 0 10px;
     }
 }
+
+/* COOKIE BANNER */
+#cookie-banner-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #222;
+    color: #fff;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+}
+
+.banner-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* MOBILE COOKIE BANNER */
+@media (max-width: 768px) {
+    #cookie-banner-container {
+        padding: 15px;
+    }
+    .banner-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+    .banner-flex span {
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+    }
+    .banner-flex button {
+        width: 100%;
+        padding: 12px !important;
+    }
+}

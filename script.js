@@ -513,30 +513,36 @@ function getCookie(name) {
 }
 
 function initCookieBanner() {
-    // Only show if the consent cookie is missing
-    if (!getCookie('cookieConsent')) {
+    const consent = getCookie('cookieConsent');
+    
+    if (!consent) {
         const banner = document.createElement('div');
         banner.id = 'cookie-banner';
         banner.innerHTML = `
-            <div style="position:fixed; bottom:0; left:0; width:100%; background:#222; color:#fff; padding:20px; text-align:center; z-index:9999; display:flex; justify-content:center; align-items:center; gap:15px; flex-wrap:wrap; box-shadow: 0 -4px 10px rgba(0,0,0,0.2);">
-                <span style="font-family: 'Inter', sans-serif; font-size: 0.95rem;">
-                    Wir verwenden Cookies für Ihre Spracheinstellungen. / We use cookies for your language preferences.
-                </span>
-                <button id="btn-accept-cookies" style="background:orange; color:black; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">Zustimmen / Confirm</button>
-                <button id="btn-deny-cookies" style="background:#555; color:#fff; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; border-radius:4px;">Ablehnen / Deny</button>
+            <div id="cookie-banner-container">
+                <div class="banner-flex">
+                    <span style="font-family: 'Inter', sans-serif;">
+                        Wir verwenden Cookies für Ihre Spracheinstellungen. / We use cookies for your language preferences.
+                    </span>
+                    <div style="display: flex; gap: 10px; width: 100%; justify-content: center;">
+                        <button id="btn-accept-cookies" style="background:orange; color:black; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; border-radius:4px; flex: 1; max-width: 200px;">Confirm</button>
+                        <button id="btn-deny-cookies" style="background:#555; color:#fff; border:none; padding:10px 20px; cursor:pointer; font-weight:bold; border-radius:4px; flex: 1; max-width: 200px;">Deny</button>
+                    </div>
+                </div>
             </div>
         `;
         document.body.appendChild(banner);
 
         document.getElementById('btn-accept-cookies').addEventListener('click', () => {
             setCookie('cookieConsent', 'accepted', 365);
-            // Save the current language choice permanently now that they agreed
             localStorage.setItem('preferredLanguage', currentLang);
             document.getElementById('cookie-banner').remove();
         });
 
         document.getElementById('btn-deny-cookies').addEventListener('click', () => {
             setCookie('cookieConsent', 'denied', 365);
+            // NUCLEAR OPTION: Clear language storage if they deny
+            localStorage.removeItem('preferredLanguage'); 
             document.getElementById('cookie-banner').remove();
         });
     }
@@ -548,7 +554,10 @@ function switchLanguage(lang) {
     const langSelect = document.getElementById('langSelect');
     if(langSelect) langSelect.value = lang;
     
-    localStorage.setItem('preferredLanguage', lang);
+    const consent = getCookie('cookieConsent');
+    if (consent !== 'denied') {
+        localStorage.setItem('preferredLanguage', lang);
+    }
 
     document.querySelectorAll('[data-lang]').forEach(el => {
         const key = el.getAttribute('data-lang');
@@ -630,6 +639,11 @@ window.addEventListener('storage', (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (getCookie('cookieConsent') === 'denied') {
+        localStorage.clear(); // Wipe it all
+        console.log("Privacy: Storage blocked per user choice.");
+    }
+
     initCookieBanner();
     switchLanguage(currentLang);
 
