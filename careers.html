@@ -374,21 +374,6 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const mobileBtn = document.getElementById('mobileMenuBtn');
-            const navMenu = document.getElementById('navMenu');
-            mobileBtn.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                const icon = mobileBtn.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            });
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
             document.getElementById('applyForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 alert(currentLang === 'en' ? 'Application submitted! We will contact you within 3 business days.' :

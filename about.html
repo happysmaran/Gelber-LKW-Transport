@@ -145,22 +145,5 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const mobileBtn = document.getElementById('mobileMenuBtn');
-            const navMenu = document.getElementById('navMenu');
-            mobileBtn.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                mobileBtn.querySelector('i').classList.toggle('fa-bars');
-                mobileBtn.querySelector('i').classList.toggle('fa-times');
-            });
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-        });
-    </script>
 </body>
 </html>
