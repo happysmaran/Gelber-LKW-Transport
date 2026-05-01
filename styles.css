@@ -1,8 +1,8 @@
 :root {
-    --primary: #f5a623; /* Authentic Gelber LKW Yellow/Gold */
+    --primary: #f5a623;
     --primary-dark: #e08f10;
-    --dark: #0a0a0a; /* Deep black from the trailer base */
-    --accent-grey: #6b7280; /* Muted grey for 'TRANSPORT' text */
+    --dark: #0a0a0a;
+    --accent-grey: #6b7280;
     --light-bg: #f8f8f8;
     --text-color: #222222;
 }
@@ -380,12 +380,10 @@ input:focus, textarea:focus {
 
 /* MOBILE RESPONSIVE */
 @media (max-width: 992px) {
-    /* 1. Language Selector: Space optimization */
     .nav-actions {
         gap: 10px;
     }
 
-    /* 2. Hero Image: Remove from mobile view per request */
     .hero {
         grid-template-columns: 1fr;
         min-height: auto;
@@ -396,7 +394,6 @@ input:focus, textarea:focus {
         display: none; /* Removes the truck image on mobile */
     }
 
-    /* 3. Tighten Spacing: Reduced from 100px to 40px */
     .section {
         padding: 40px 5%; 
     }
@@ -424,7 +421,6 @@ input:focus, textarea:focus {
         padding-top: 1.5rem;
     }
 
-    /* 4. About Section: Fix width and clipping */
     .about-grid, .contact-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -443,7 +439,6 @@ input:focus, textarea:focus {
         height: auto;
     }
 
-    /* 5. Tracking Popup: Fix clipping */
     .modal-content {
         width: 95%;
         padding: 1.5rem;

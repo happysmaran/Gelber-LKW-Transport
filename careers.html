@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karriere | Gelber LKW Transport</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="attachments/logo.png" type="image/png">
+    <style>
+        .page-hero {
+            background: var(--dark);
+            padding: 140px 5% 80px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg, transparent, transparent 40px,
+                rgba(245,166,35,0.03) 40px, rgba(245,166,35,0.03) 80px
+            );
+        }
+        .page-hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; position: relative; }
+        .page-hero p { font-size: 1.2rem; color: #aaa; max-width: 600px; margin: 0 auto; position: relative; }
+        .page-hero .highlight { color: var(--primary); }
+
+        /* WHY US */
+        .why-section { padding: 80px 5%; max-width: 1400px; margin: 0 auto; }
+        .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .why-card {
+            padding: 2rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .why-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .why-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; display: block; }
+        .why-card h4 { font-size: 1.05rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
+        .why-card p { font-size: 0.9rem; color: #666; }
+
+        /* JOBS */
+        .jobs-section { padding: 80px 5%; background: var(--light-bg); }
+        .jobs-inner { max-width: 1400px; margin: 0 auto; }
+        .jobs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; margin-top: 3rem; }
+
+        .job-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .job-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        .job-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+        .job-icon { font-size: 2rem; color: var(--primary); flex-shrink: 0; padding-top: 4px; }
+        .job-title h3 { font-size: 1.3rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+        .job-meta { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+        .job-tag {
+            background: var(--light-bg);
+            color: var(--accent-grey);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .job-tag.highlight-tag { background: rgba(245,166,35,0.15); color: var(--primary-dark); }
+        .job-desc { color: #555; line-height: 1.7; margin-bottom: 1.5rem; flex: 1; }
+        .job-req { list-style: none; margin-bottom: 2rem; }
+        .job-req li { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #555; padding: 5px 0; }
+        .job-req li i { color: var(--primary); font-size: 0.8rem; width: 14px; }
+        .job-card .btn-primary { align-self: flex-start; }
+
+        /* APPLICATION FORM */
+        .apply-section { padding: 80px 5%; max-width: 900px; margin: 0 auto; }
+        .apply-section h2 { font-size: 2rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
+        .apply-section p { color: #555; margin-bottom: 2rem; }
+
+        .apply-form { background: var(--light-bg); padding: 3rem; border-radius: 12px; }
+        .apply-form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .apply-form .form-group { margin-bottom: 1.5rem; }
+        .apply-form label { display: block; font-weight: 700; font-size: 0.9rem; color: var(--dark); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .apply-form select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: #fff;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            cursor: pointer;
+        }
+        .apply-form select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245,166,35,0.2); }
+
+        @media (max-width: 992px) {
+            .page-hero h1 { font-size: 2.2rem; }
+            .apply-form .form-row { grid-template-columns: 1fr; }
+            .apply-form { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="attachments/logo.png" alt="Gelber LKW Logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="company-name">GELBER LKW</span>
+                    <span class="company-tag">TRANSPORT</span>
+                </div>
+            </div>
+            <div class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link" data-lang="nav.home">Home</a>
+                <a href="services.html" class="nav-link" data-lang="nav.services">Dienstleistungen</a>
+                <a href="fleet.html" class="nav-link" data-lang="nav.fleet">Flotte</a>
+                <a href="about.html" class="nav-link" data-lang="nav.about">Über uns</a>
+                <a href="careers.html" class="nav-link active" data-lang="nav.careers">Karriere</a>
+                <a href="contact.html" class="nav-link" data-lang="nav.contact">Kontakt</a>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-selector-wrapper">
+                    <select id="langSelect" class="lang-dropdown" onchange="switchLanguage(this.value)">
+                        <option value="de">DE</option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                    </select>
+                </div>
+                <button onclick="showTrackingModal()" class="btn-primary track-btn desk-only">
+                    <i class="fas fa-truck"></i> <span data-lang="nav.track">Sendung verfolgen</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1 data-lang="careers.title">Karriere bei <span class="highlight">Gelber LKW</span></h1>
+        <p data-lang="careers.subtitle">Werden Sie Teil unseres wachsenden Teams</p>
+    </div>
+
+    <!-- WHY US -->
+    <div class="why-section">
+        <div class="section-header fade-in">
+            <h2 data-lang="careers.why_title">Warum Gelber LKW?</h2>
+            <div class="title-underline"></div>
+            <p data-lang="careers.why_sub">Was wir unseren Mitarbeitenden bieten</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card fade-in">
+                <i class="fas fa-euro-sign"></i>
+                <h4 data-lang="careers.ben1_title">Attraktive Vergütung</h4>
+                <p data-lang="careers.ben1_desc">Überdurchschnittliche Gehälter, Prämien und Spesenpauschalen.</p>
+            </div>
+            <div class="why-card fade-in">
+                <i class="fas fa-graduation-cap"></i>
+                <h4 data-lang="careers.ben2_title">Weiterbildung</h4>
+                <p data-lang="careers.ben2_desc">Regelmäßige Schulungen, CPC-Fortbildungen und Karrierepfade.</p>
+            </div>
+            <div class="why-card fade-in">
+                <i class="fas fa-truck"></i>
+                <h4 data-lang="careers.ben3_title">Moderne Fahrzeuge</h4>
+                <p data-lang="careers.ben3_desc">Sie fahren stets aktuelle Scania-Fahrzeuge mit Top-Ausstattung.</p>
+            </div>
+            <div class="why-card fade-in">
+                <i class="fas fa-home"></i>
+                <h4 data-lang="careers.ben4_title">Heimnähe</h4>
+                <p data-lang="careers.ben4_desc">Regional- und Fernverkehrsstellen mit geplanten Heimkehrterminen.</p>
+            </div>
+            <div class="why-card fade-in">
+                <i class="fas fa-heart"></i>
+                <h4 data-lang="careers.ben5_title">Betriebliche Gesundheit</h4>
+                <p data-lang="careers.ben5_desc">Krankenversicherung, betriebliche Altersvorsorge und Sportangebote.</p>
+            </div>
+            <div class="why-card fade-in">
+                <i class="fas fa-users"></i>
+                <h4 data-lang="careers.ben6_title">Teamkultur</h4>
+                <p data-lang="careers.ben6_desc">Flache Hierarchien, offene Kommunikation und jährliche Teamevents.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JOBS -->
+    <div class="jobs-section">
+        <div class="jobs-inner">
+            <div class="section-header fade-in">
+                <h2 data-lang="careers.jobs_title">Offene Stellen</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="jobs-grid">
+                <!-- Job 1 -->
+                <div class="job-card fade-in">
+                    <div class="job-header">
+                        <div class="job-icon"><i class="fas fa-truck"></i></div>
+                        <div class="job-title">
+                            <h3 data-lang="careers.job1_title">Fernfahrer (m/w/d) CE</h3>
+                            <div class="job-meta">
+                                <span class="job-tag">Vollzeit</span>
+                                <span class="job-tag">Windhof, LU</span>
+                                <span class="job-tag highlight-tag">Sofort</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="job-desc" data-lang="careers.job1_desc">Einsatz im internationalen Fernverkehr mit modernen Scania-Fahrzeugen. Sie fahren europäische Relationen ab dem Standort Windhof und kehren regelmäßig heim.</p>
+                    <ul class="job-req">
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j1_r1">Führerschein Klasse CE</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j1_r2">Fahrerkarte & gültige CPC</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j1_r3">Berufserfahrung im Fernverkehr</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j1_r4">Zuverlässigkeit und Teamgeist</span></li>
+                    </ul>
+                    <a href="#apply-form" class="btn-primary small" data-lang="careers.apply">Jetzt bewerben</a>
+                </div>
+
+                <!-- Job 2 -->
+                <div class="job-card fade-in">
+                    <div class="job-header">
+                        <div class="job-icon"><i class="fas fa-headset"></i></div>
+                        <div class="job-title">
+                            <h3 data-lang="careers.job2_title">Disponent (m/w/d)</h3>
+                            <div class="job-meta">
+                                <span class="job-tag">Vollzeit</span>
+                                <span class="job-tag">Windhof, LU</span>
+                                <span class="job-tag highlight-tag">Sofort</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="job-desc" data-lang="careers.job2_desc">Planung und Steuerung unserer Flotte am Standort Windhof. Sie koordinieren die Touren, sind Ansprechpartner für Fahrer und Kunden.</p>
+                    <ul class="job-req">
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j2_r1">Erfahrung in Transportdisposition</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j2_r2">Kenntnisse in TMS-Systemen von Vorteil</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j2_r3">Deutsch & Englisch fließend</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j2_r4">Belastbarkeit und Organisationstalent</span></li>
+                    </ul>
+                    <a href="#apply-form" class="btn-primary small" data-lang="careers.apply">Jetzt bewerben</a>
+                </div>
+
+                <!-- Job 3 -->
+                <div class="job-card fade-in">
+                    <div class="job-header">
+                        <div class="job-icon"><i class="fas fa-warehouse"></i></div>
+                        <div class="job-title">
+                            <h3 data-lang="careers.job3_title">Lagerlogistiker (m/w/d)</h3>
+                            <div class="job-meta">
+                                <span class="job-tag">Vollzeit</span>
+                                <span class="job-tag">Windhof, LU</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="job-desc" data-lang="careers.job3_desc">Wareneingang, -ausgang, Kommissionierung und Inventur in unserem modernen Lagerzentrum. Abwechslungsreiche Tätigkeiten in einem eingespielten Team.</p>
+                    <ul class="job-req">
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j3_r1">Erfahrung in Lagerhaltung</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j3_r2">Staplerschein von Vorteil</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j3_r3">Kenntnisse in Warenwirtschaftssystemen</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j3_r4">Teamfähigkeit und Sorgfalt</span></li>
+                    </ul>
+                    <a href="#apply-form" class="btn-primary small" data-lang="careers.apply">Jetzt bewerben</a>
+                </div>
+
+                <!-- Job 4 -->
+                <div class="job-card fade-in">
+                    <div class="job-header">
+                        <div class="job-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="job-title">
+                            <h3 data-lang="careers.job4_title">Sachbearbeiter Zoll (m/w/d)</h3>
+                            <div class="job-meta">
+                                <span class="job-tag">Vollzeit</span>
+                                <span class="job-tag">Windhof, LU</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="job-desc" data-lang="careers.job4_desc">Abwicklung von Import- und Exportzollformalitäten, Erstellung von Frachtdokumenten und Beratung unserer Kunden in Zollfragen.</p>
+                    <ul class="job-req">
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j4_r1">Ausbildung im Speditionswesen</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j4_r2">Kenntnisse EU-Zollrecht</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j4_r3">ATLAS-Kenntnisse von Vorteil</span></li>
+                        <li><i class="fas fa-check"></i> <span data-lang="careers.j4_r4">Englisch und Deutsch fließend</span></li>
+                    </ul>
+                    <a href="#apply-form" class="btn-primary small" data-lang="careers.apply">Jetzt bewerben</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION FORM -->
+    <div class="apply-section" id="apply-form">
+        <h2 data-lang="careers.form_title">Bewerbung einreichen</h2>
+        <div class="title-underline left"></div>
+        <p data-lang="careers.form_sub">Füllen Sie das Formular aus und wir melden uns innerhalb von 3 Werktagen bei Ihnen.</p>
+        <div class="apply-form">
+            <form id="applyForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-lang="careers.f_firstname">Vorname</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang="careers.f_lastname">Nachname</label>
+                        <input type="text" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-lang="careers.f_email">E-Mail</label>
+                        <input type="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang="careers.f_phone">Telefon</label>
+                        <input type="tel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-lang="careers.f_position">Stelle</label>
+                    <select>
+                        <option data-lang="careers.job1_title">Fernfahrer (m/w/d) CE</option>
+                        <option data-lang="careers.job2_title">Disponent (m/w/d)</option>
+                        <option data-lang="careers.job3_title">Lagerlogistiker (m/w/d)</option>
+                        <option data-lang="careers.job4_title">Sachbearbeiter Zoll (m/w/d)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-lang="careers.f_message">Motivationsschreiben / Nachricht</label>
+                    <textarea rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" data-lang="careers.apply">Jetzt bewerben</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>© 2026 Gelber LKW Transport S.à r.l. • Windhof, Luxemburg • <span data-lang="footer.allrights">Alle Rechte vorbehalten</span></p>
+        </div>
+    </footer>
+
+    <!-- TRACKING MODAL -->
+    <div id="trackingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideTrackingModal()">×</span>
+            <div class="modal-header">
+                <i class="fas fa-truck-fast"></i>
+                <h2 data-lang="tracking.modal_title">Sendung verfolgen</h2>
+            </div>
+            <div class="tracking-form-group">
+                <input type="text" id="modal-tracking-number" placeholder="GLK-20260430-837291" class="modal-input">
+                <br><br>
+                <button onclick="trackShipmentModal()" class="btn-primary full-width" data-lang="tracking.btn">Verfolgen</button>
+            </div>
+            <div id="modal-tracking-result" class="tracking-result hidden">
+                <div id="tracking-status-info"></div>
+                <div id="trackingMap" style="height: 300px; width: 100%; margin-top: 15px; border-radius: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.getElementById('navMenu');
+            mobileBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                const icon = mobileBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            document.getElementById('applyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert(currentLang === 'en' ? 'Application submitted! We will contact you within 3 business days.' :
+                      currentLang === 'fr' ? 'Candidature soumise ! Nous vous contacterons sous 3 jours ouvrables.' :
+                      'Bewerbung eingereicht! Wir melden uns innerhalb von 3 Werktagen.');
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>

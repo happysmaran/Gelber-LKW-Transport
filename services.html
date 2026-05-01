@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dienstleistungen | Gelber LKW Transport</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="attachments/logo.png" type="image/png">
+    <style>
+        .page-hero {
+            background: var(--dark);
+            padding: 140px 5% 80px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(245,166,35,0.03) 40px,
+                rgba(245,166,35,0.03) 80px
+            );
+        }
+        .page-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .page-hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .page-hero .highlight { color: var(--primary); }
+
+        .services-full {
+            padding: 80px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .service-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 60px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .service-row:last-child { border-bottom: none; }
+        .service-row.reverse { direction: rtl; }
+        .service-row.reverse > * { direction: ltr; }
+
+        .service-detail-icon {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        .service-detail h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        .service-detail p {
+            font-size: 1.05rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        .service-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        .service-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .service-features li i {
+            color: var(--primary);
+            font-size: 1rem;
+            width: 20px;
+        }
+
+        .service-visual {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(245,166,35,0.07) 0%, transparent 60%);
+        }
+        .service-visual .big-icon {
+            font-size: 6rem;
+            color: var(--primary);
+            opacity: 0.15;
+            position: absolute;
+            bottom: -10px;
+            right: 10px;
+        }
+        .service-visual .stat-block {
+            position: relative;
+        }
+        .service-visual .stat-block .num {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            display: block;
+        }
+        .service-visual .stat-block .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent-grey);
+            letter-spacing: 1px;
+        }
+        .stat-row {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+        .stat-divider {
+            width: 1px;
+            background: #ddd;
+            align-self: stretch;
+        }
+
+        .cta-band {
+            background: var(--dark);
+            color: #fff;
+            padding: 60px 5%;
+            text-align: center;
+        }
+        .cta-band h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+        .cta-band p { color: #aaa; margin-bottom: 2rem; }
+
+        @media (max-width: 992px) {
+            .service-row { grid-template-columns: 1fr; gap: 2rem; }
+            .service-row.reverse { direction: ltr; }
+            .page-hero h1 { font-size: 2.2rem; }
+            .stat-row { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="attachments/logo.png" alt="Gelber LKW Logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="company-name">GELBER LKW</span>
+                    <span class="company-tag">TRANSPORT</span>
+                </div>
+            </div>
+            <div class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link" data-lang="nav.home">Home</a>
+                <a href="services.html" class="nav-link active" data-lang="nav.services">Dienstleistungen</a>
+                <a href="fleet.html" class="nav-link" data-lang="nav.fleet">Flotte</a>
+                <a href="about.html" class="nav-link" data-lang="nav.about">Über uns</a>
+                <a href="careers.html" class="nav-link" data-lang="nav.careers">Karriere</a>
+                <a href="contact.html" class="nav-link" data-lang="nav.contact">Kontakt</a>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-selector-wrapper">
+                    <select id="langSelect" class="lang-dropdown" onchange="switchLanguage(this.value)">
+                        <option value="de">DE</option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                    </select>
+                </div>
+                <button onclick="showTrackingModal()" class="btn-primary track-btn desk-only">
+                    <i class="fas fa-truck"></i> <span data-lang="nav.track">Sendung verfolgen</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1 data-lang="services.title">Unsere <span class="highlight">Dienstleistungen</span></h1>
+        <p data-lang="services.subtitle">Maßgeschneiderte Logistiklösungen für jeden Bedarf</p>
+    </div>
+
+    <!-- SERVICES DETAIL -->
+    <div class="services-full">
+
+        <!-- Road Freight -->
+        <div class="service-row fade-in">
+            <div class="service-detail">
+                <i class="fas fa-truck service-detail-icon"></i>
+                <h2 data-lang="services.road">Straßentransport</h2>
+                <p data-lang="sd.road_long">Nationaler und internationaler Transport mit unserer modernen LKW-Flotte. Ob Komplettladungen (FTL) oder Teilladungen (LTL) — wir liefern pünktlich und sicher durch ganz Europa.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.road_f1">Komplettladungen (FTL) & Teilladungen (LTL)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.road_f2">Express- und Overnight-Lieferungen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.road_f3">Reefer-Transporte mit Temperaturkontrolle</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.road_f4">Gefahrgutzertifiziert (ADR)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.road_f5">Echtzeit-GPS-Tracking für alle Sendungen</span></li>
+                </ul>
+            </div>
+            <div class="service-visual">
+                <div class="stat-row">
+                    <div class="stat-block">
+                        <span class="num">150+</span>
+                        <span class="label" data-lang="sd.trucks">LKWs</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <span class="num">12</span>
+                        <span class="label" data-lang="sd.countries">Länder</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <span class="num">24/7</span>
+                        <span class="label" data-lang="sd.support">Support</span>
+                    </div>
+                </div>
+                <i class="fas fa-truck big-icon"></i>
+            </div>
+        </div>
+
+        <!-- Sea Freight -->
+        <div class="service-row reverse fade-in">
+            <div class="service-detail">
+                <i class="fas fa-ship service-detail-icon"></i>
+                <h2 data-lang="services.sea">Seefracht & Multimodal</h2>
+                <p data-lang="sd.sea_long">Kombinierte Transportlösungen über Straße, Schiene und Meer in Partnerschaft mit DHL. Wir organisieren die gesamte Lieferkette vom Versender bis zum Empfänger — weltweit.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.sea_f1">FCL & LCL Seefrachtlösungen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.sea_f2">Anbindung an alle großen Seehäfen (Rotterdam, Hamburg, Antwerpen)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.sea_f3">Multimodale Ketten inkl. Schiene</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.sea_f4">Door-to-Port & Port-to-Door</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.sea_f5">Dokumentenmanagement & Akkreditive</span></li>
+                </ul>
+            </div>
+            <div class="service-visual">
+                <div class="stat-row">
+                    <div class="stat-block">
+                        <span class="num">3</span>
+                        <span class="label" data-lang="sd.ports">Partnerhäfen</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <span class="num">50+</span>
+                        <span class="label" data-lang="sd.destinations">Ziele</span>
+                    </div>
+                </div>
+                <i class="fas fa-ship big-icon"></i>
+            </div>
+        </div>
+
+        <!-- Warehouse -->
+        <div class="service-row fade-in">
+            <div class="service-detail">
+                <i class="fas fa-warehouse service-detail-icon"></i>
+                <h2 data-lang="services.warehouse">Lagerung & Fulfillment</h2>
+                <p data-lang="sd.wh_long">Moderne Lagerflächen in Luxemburg mit Temperaturkontrolle, Sicherheitsüberwachung und flexiblen Mietmodellen. Von der kurzfristigen Zwischenlagerung bis zum vollständigen Fulfillment-Service.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.wh_f1">10.000+ m² Lagerfläche in Windhof</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.wh_f2">Klimatisierte & Kühllagerzonen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.wh_f3">Kommissionierung & Pick-and-Pack</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.wh_f4">Retourenmanagement</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.wh_f5">WMS-Integration & Echtzeit-Inventar</span></li>
+                </ul>
+            </div>
+            <div class="service-visual">
+                <div class="stat-row">
+                    <div class="stat-block">
+                        <span class="num">10k+</span>
+                        <span class="label" data-lang="sd.sqm">m² Fläche</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <span class="num">-20°</span>
+                        <span class="label" data-lang="sd.temp">bis +25°C</span>
+                    </div>
+                </div>
+                <i class="fas fa-warehouse big-icon"></i>
+            </div>
+        </div>
+
+        <!-- Global Logistics -->
+        <div class="service-row reverse fade-in">
+            <div class="service-detail">
+                <i class="fas fa-globe service-detail-icon"></i>
+                <h2 data-lang="services.global">Internationale Logistik</h2>
+                <p data-lang="sd.gl_long">Von Luxemburg nach Europa und darüber hinaus. Wir übernehmen die komplette Zollabwicklung, kümmern uns um Exportdokumente und koordinieren grenzüberschreitende Transporte effizient und rechtssicher.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.gl_f1">Zollabwicklung import & export</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.gl_f2">AEO-zertifiziertes Unternehmen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.gl_f3">Exportdokumente & Ursprungszeugnisse</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.gl_f4">Incoterms-Beratung</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-lang="sd.gl_f5">Netzwerk in 12+ Ländern</span></li>
+                </ul>
+            </div>
+            <div class="service-visual">
+                <div class="stat-row">
+                    <div class="stat-block">
+                        <span class="num">12+</span>
+                        <span class="label" data-lang="sd.countries">Länder</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-block">
+                        <span class="num">AEO</span>
+                        <span class="label" data-lang="sd.certified">Zertifiziert</span>
+                    </div>
+                </div>
+                <i class="fas fa-globe big-icon"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+        <h2 data-lang="sd.cta_title">Bereit für Ihr nächstes Projekt?</h2>
+        <p data-lang="sd.cta_sub">Fordern Sie noch heute ein unverbindliches Angebot an.</p>
+        <a href="contact.html" class="btn-primary" data-lang="sd.cta_btn">Angebot anfragen</a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>© 2026 Gelber LKW Transport S.à r.l. • Windhof, Luxemburg • <span data-lang="footer.allrights">Alle Rechte vorbehalten</span></p>
+        </div>
+    </footer>
+
+    <!-- TRACKING MODAL -->
+    <div id="trackingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideTrackingModal()">×</span>
+            <div class="modal-header">
+                <i class="fas fa-truck-fast"></i>
+                <h2 data-lang="tracking.modal_title">Sendung verfolgen</h2>
+            </div>
+            <div class="tracking-form-group">
+                <input type="text" id="modal-tracking-number" placeholder="GLK-20260430-837291" class="modal-input">
+                <br><br>
+                <button onclick="trackShipmentModal()" class="btn-primary full-width" data-lang="tracking.btn">Verfolgen</button>
+            </div>
+            <div id="modal-tracking-result" class="tracking-result hidden">
+                <div id="tracking-status-info"></div>
+                <div id="trackingMap" style="height: 300px; width: 100%; margin-top: 15px; border-radius: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.getElementById('navMenu');
+            mobileBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                const icon = mobileBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        });
+
+        // Extend translations for this page
+        const pageTranslations = {
+            de: {
+                "sd.road_long": "Nationaler und internationaler Transport mit unserer modernen LKW-Flotte. Ob Komplettladungen (FTL) oder Teilladungen (LTL) — wir liefern pünktlich und sicher durch ganz Europa.",
+                "sd.road_f1": "Komplettladungen (FTL) & Teilladungen (LTL)",
+                "sd.road_f2": "Express- und Overnight-Lieferungen",
+                "sd.road_f3": "Reefer-Transporte mit Temperaturkontrolle",
+                "sd.road_f4": "Gefahrgutzertifiziert (ADR)",
+                "sd.road_f5": "Echtzeit-GPS-Tracking für alle Sendungen",
+                "sd.trucks": "LKWs", "sd.countries": "Länder", "sd.support": "Support",
+                "sd.sea_long": "Kombinierte Transportlösungen über Straße, Schiene und Meer in Partnerschaft mit DHL.",
+                "sd.sea_f1": "FCL & LCL Seefrachtlösungen",
+                "sd.sea_f2": "Anbindung an alle großen Seehäfen",
+                "sd.sea_f3": "Multimodale Ketten inkl. Schiene",
+                "sd.sea_f4": "Door-to-Port & Port-to-Door",
+                "sd.sea_f5": "Dokumentenmanagement & Akkreditive",
+                "sd.ports": "Partnerhäfen", "sd.destinations": "Ziele",
+                "sd.wh_long": "Moderne Lagerflächen in Luxemburg mit Temperaturkontrolle und flexiblen Mietmodellen.",
+                "sd.wh_f1": "10.000+ m² Lagerfläche in Windhof",
+                "sd.wh_f2": "Klimatisierte & Kühllagerzonen",
+                "sd.wh_f3": "Kommissionierung & Pick-and-Pack",
+                "sd.wh_f4": "Retourenmanagement",
+                "sd.wh_f5": "WMS-Integration & Echtzeit-Inventar",
+                "sd.sqm": "m² Fläche", "sd.temp": "bis +25°C",
+                "sd.gl_long": "Von Luxemburg nach Europa und darüber hinaus. Wir übernehmen die komplette Zollabwicklung.",
+                "sd.gl_f1": "Zollabwicklung import & export",
+                "sd.gl_f2": "AEO-zertifiziertes Unternehmen",
+                "sd.gl_f3": "Exportdokumente & Ursprungszeugnisse",
+                "sd.gl_f4": "Incoterms-Beratung",
+                "sd.gl_f5": "Netzwerk in 12+ Ländern",
+                "sd.certified": "Zertifiziert",
+                "sd.cta_title": "Bereit für Ihr nächstes Projekt?",
+                "sd.cta_sub": "Fordern Sie noch heute ein unverbindliches Angebot an.",
+                "sd.cta_btn": "Angebot anfragen"
+            },
+            en: {
+                "sd.road_long": "National and international transport with our modern truck fleet. Whether full truckloads (FTL) or partial loads (LTL) — we deliver on time and safely across Europe.",
+                "sd.road_f1": "Full Truckload (FTL) & Less than Truckload (LTL)",
+                "sd.road_f2": "Express and overnight deliveries",
+                "sd.road_f3": "Reefer transport with temperature control",
+                "sd.road_f4": "Hazardous goods certified (ADR)",
+                "sd.road_f5": "Real-time GPS tracking for all shipments",
+                "sd.trucks": "Trucks", "sd.countries": "Countries", "sd.support": "Support",
+                "sd.sea_long": "Combined transport solutions by road, rail, and sea in partnership with DHL. We manage the entire supply chain from sender to receiver — worldwide.",
+                "sd.sea_f1": "FCL & LCL sea freight solutions",
+                "sd.sea_f2": "Access to all major seaports (Rotterdam, Hamburg, Antwerp)",
+                "sd.sea_f3": "Multimodal chains including rail",
+                "sd.sea_f4": "Door-to-Port & Port-to-Door",
+                "sd.sea_f5": "Document management & letters of credit",
+                "sd.ports": "Partner Ports", "sd.destinations": "Destinations",
+                "sd.wh_long": "Modern warehouse spaces in Luxembourg with temperature control, security monitoring, and flexible rental models.",
+                "sd.wh_f1": "10,000+ m² warehouse space in Windhof",
+                "sd.wh_f2": "Air-conditioned & cold storage zones",
+                "sd.wh_f3": "Order picking & pack-and-pack",
+                "sd.wh_f4": "Returns management",
+                "sd.wh_f5": "WMS integration & real-time inventory",
+                "sd.sqm": "m² Space", "sd.temp": "to +25°C",
+                "sd.gl_long": "From Luxembourg to Europe and beyond. We handle complete customs clearance and coordinate cross-border transports efficiently.",
+                "sd.gl_f1": "Customs clearance import & export",
+                "sd.gl_f2": "AEO-certified company",
+                "sd.gl_f3": "Export documents & certificates of origin",
+                "sd.gl_f4": "Incoterms consulting",
+                "sd.gl_f5": "Network in 12+ countries",
+                "sd.certified": "Certified",
+                "sd.cta_title": "Ready for your next project?",
+                "sd.cta_sub": "Request a free quote today.",
+                "sd.cta_btn": "Request a Quote"
+            },
+            fr: {
+                "sd.road_long": "Transport national et international avec notre flotte de camions moderne. Que ce soit des chargements complets (FTL) ou des chargements partiels (LTL) — nous livrons à temps et en toute sécurité.",
+                "sd.road_f1": "Chargements complets (FTL) & partiels (LTL)",
+                "sd.road_f2": "Livraisons express et de nuit",
+                "sd.road_f3": "Transport frigorifique avec contrôle de température",
+                "sd.road_f4": "Certifié marchandises dangereuses (ADR)",
+                "sd.road_f5": "Suivi GPS en temps réel pour tous les envois",
+                "sd.trucks": "Camions", "sd.countries": "Pays", "sd.support": "Assistance",
+                "sd.sea_long": "Solutions de transport combinées par route, rail et mer en partenariat avec DHL. Nous gérons toute la chaîne logistique.",
+                "sd.sea_f1": "Solutions fret maritime FCL & LCL",
+                "sd.sea_f2": "Accès à tous les grands ports maritimes",
+                "sd.sea_f3": "Chaînes multimodales incluant le rail",
+                "sd.sea_f4": "Porte-à-port & port-à-porte",
+                "sd.sea_f5": "Gestion documentaire & crédits documentaires",
+                "sd.ports": "Ports partenaires", "sd.destinations": "Destinations",
+                "sd.wh_long": "Espaces d'entreposage modernes au Luxembourg avec contrôle de température et modèles de location flexibles.",
+                "sd.wh_f1": "Plus de 10 000 m² d'espace à Windhof",
+                "sd.wh_f2": "Zones climatisées & entreposage frigorifique",
+                "sd.wh_f3": "Préparation de commandes & emballage",
+                "sd.wh_f4": "Gestion des retours",
+                "sd.wh_f5": "Intégration WMS & inventaire en temps réel",
+                "sd.sqm": "m² d'espace", "sd.temp": "jusqu'à +25°C",
+                "sd.gl_long": "Du Luxembourg vers l'Europe et au-delà. Nous gérons le dédouanement complet et coordonnons les transports transfrontaliers.",
+                "sd.gl_f1": "Dédouanement import & export",
+                "sd.gl_f2": "Entreprise certifiée OEA",
+                "sd.gl_f3": "Documents d'exportation & certificats d'origine",
+                "sd.gl_f4": "Conseil Incoterms",
+                "sd.gl_f5": "Réseau dans plus de 12 pays",
+                "sd.certified": "Certifié",
+                "sd.cta_title": "Prêt pour votre prochain projet ?",
+                "sd.cta_sub": "Demandez un devis gratuit dès aujourd'hui.",
+                "sd.cta_btn": "Demander un devis"
+            }
+        };
+
+        const origSwitch = switchLanguage;
+        switchLanguage = function(lang) {
+            origSwitch(lang);
+            if (pageTranslations[lang]) {
+                Object.assign(translations[lang], pageTranslations[lang]);
+                document.querySelectorAll('[data-lang]').forEach(el => {
+                    const key = el.getAttribute('data-lang');
+                    if (pageTranslations[lang][key]) {
+                        el.textContent = pageTranslations[lang][key];
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+</html>

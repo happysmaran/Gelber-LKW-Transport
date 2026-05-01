@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt | Gelber LKW Transport</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="attachments/logo.png" type="image/png">
+    <style>
+        .page-hero {
+            background: var(--dark);
+            padding: 140px 5% 80px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg, transparent, transparent 40px,
+                rgba(245,166,35,0.03) 40px, rgba(245,166,35,0.03) 80px
+            );
+        }
+        .page-hero h1 { font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; position: relative; }
+        .page-hero p { font-size: 1.2rem; color: #aaa; max-width: 600px; margin: 0 auto; position: relative; }
+        .page-hero .highlight { color: var(--primary); }
+
+        /* CONTACT MAIN */
+        .contact-main {
+            padding: 80px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        /* INFO SIDE */
+        .contact-info-full h2 { font-size: 1.8rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
+        .contact-info-full > p { color: #555; margin-bottom: 2.5rem; line-height: 1.7; }
+
+        .contact-card {
+            display: flex;
+            gap: 1.2rem;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            transition: box-shadow 0.3s;
+        }
+        .contact-card:hover { box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        .contact-card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--dark);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        .contact-card-info strong { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-grey); font-weight: 700; margin-bottom: 4px; }
+        .contact-card-info span { color: var(--dark); font-size: 1rem; line-height: 1.5; }
+        .contact-card-info a { color: var(--dark); text-decoration: none; }
+        .contact-card-info a:hover { color: var(--primary-dark); }
+
+        /* HOURS */
+        .hours-table { margin-top: 2rem; }
+        .hours-table h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-grey); font-weight: 700; margin-bottom: 1rem; }
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+        .hours-row:last-child { border-bottom: none; }
+        .hours-row .day { font-weight: 600; color: var(--dark); }
+        .hours-row .time { color: #555; }
+        .hours-row .badge-open { color: var(--primary-dark); font-weight: 700; }
+
+        /* FORM SIDE */
+        .contact-form-full h2 { font-size: 1.8rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
+        .contact-form-full > p { color: #555; margin-bottom: 2rem; }
+
+        .form-inner {
+            background: var(--light-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+        }
+        .form-inner .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        .form-inner .form-group { margin-bottom: 1.2rem; }
+        .form-inner label { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+        .form-inner select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: #fff;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            cursor: pointer;
+        }
+        .form-inner select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(245,166,35,0.2); }
+
+        /* MAP */
+        .map-section { background: var(--dark); }
+        #locationMap { height: 400px; width: 100%; display: block; }
+
+        /* QUICK CONTACT BAND */
+        .quick-band {
+            background: var(--primary);
+            padding: 40px 5%;
+            text-align: center;
+        }
+        .quick-band-inner { max-width: 800px; margin: 0 auto; }
+        .quick-band h3 { font-size: 1.5rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
+        .quick-band p { color: rgba(0,0,0,0.65); margin-bottom: 1.5rem; }
+        .quick-band-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .btn-dark { background: var(--dark); color: #fff; padding: 14px 28px; border-radius: 4px; font-weight: 800; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-block; border: none; transition: 0.3s; }
+        .btn-dark:hover { background: #333; transform: translateY(-2px); }
+
+        @media (max-width: 992px) {
+            .contact-main { grid-template-columns: 1fr; gap: 3rem; }
+            .form-inner .form-row { grid-template-columns: 1fr; }
+            .page-hero h1 { font-size: 2.2rem; }
+            .form-inner { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="attachments/logo.png" alt="Gelber LKW Logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="company-name">GELBER LKW</span>
+                    <span class="company-tag">TRANSPORT</span>
+                </div>
+            </div>
+            <div class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link" data-lang="nav.home">Home</a>
+                <a href="services.html" class="nav-link" data-lang="nav.services">Dienstleistungen</a>
+                <a href="fleet.html" class="nav-link" data-lang="nav.fleet">Flotte</a>
+                <a href="about.html" class="nav-link" data-lang="nav.about">Über uns</a>
+                <a href="careers.html" class="nav-link" data-lang="nav.careers">Karriere</a>
+                <a href="contact.html" class="nav-link active" data-lang="nav.contact">Kontakt</a>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-selector-wrapper">
+                    <select id="langSelect" class="lang-dropdown" onchange="switchLanguage(this.value)">
+                        <option value="de">DE</option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                    </select>
+                </div>
+                <button onclick="showTrackingModal()" class="btn-primary track-btn desk-only">
+                    <i class="fas fa-truck"></i> <span data-lang="nav.track">Sendung verfolgen</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <h1 data-lang="contact.title">Kontaktieren Sie <span class="highlight">uns</span></h1>
+        <p data-lang="contact.hero_sub">Wir sind für Sie da — persönlich, schnell und kompetent.</p>
+    </div>
+
+    <!-- QUICK BAND -->
+    <div class="quick-band">
+        <div class="quick-band-inner">
+            <h3 data-lang="contact.urgent_title">Dringende Anfrage?</h3>
+            <p data-lang="contact.urgent_sub">Für sofortige Hilfe rufen Sie uns direkt an oder schreiben Sie uns eine E-Mail.</p>
+            <div class="quick-band-btns">
+                <a href="tel:+352289977000" class="btn-dark"><i class="fas fa-phone"></i> &nbsp;+352 28 99 77 00</a>
+                <a href="mailto:info@gelber-lkw-transport.de" class="btn-dark"><i class="fas fa-envelope"></i> &nbsp;info@gelber-lkw-transport.de</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTACT -->
+    <div class="contact-main">
+
+        <!-- INFO -->
+        <div class="contact-info-full fade-in">
+            <h2 data-lang="contact.info_title">Kontaktinformationen</h2>
+            <div class="title-underline left"></div>
+            <p data-lang="contact.info_sub">Unser Team steht Ihnen werktags und rund um die Uhr per Notfallnummer zur Verfügung.</p>
+
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="contact-card-info">
+                    <strong data-lang="contact.address">Hauptsitz</strong>
+                    <span>12 Rue de l'Industrie<br>L-8399 Windhof, Luxemburg</span>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fas fa-phone"></i></div>
+                <div class="contact-card-info">
+                    <strong data-lang="contact.phone">Telefon</strong>
+                    <span><a href="tel:+352289977000">+352 28 99 77 00</a></span>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="contact-card-info">
+                    <strong data-lang="contact.emergency">Notfall 24/7</strong>
+                    <span><a href="tel:+352621999000">+352 621 999 000</a></span>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fas fa-envelope"></i></div>
+                <div class="contact-card-info">
+                    <strong data-lang="contact.email">E-Mail</strong>
+                    <span><a href="mailto:info@gelber-lkw-transport.de">info@gelber-lkw-transport.de</a></span>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-card-icon"><i class="fas fa-file-contract"></i></div>
+                <div class="contact-card-info">
+                    <strong data-lang="contact.quotes">Angebote</strong>
+                    <span><a href="mailto:angebote@gelber-lkw-transport.de">angebote@gelber-lkw-transport.de</a></span>
+                </div>
+            </div>
+
+            <div class="hours-table">
+                <h4 data-lang="contact.hours_title">ÖFFNUNGSZEITEN</h4>
+                <div class="hours-row">
+                    <span class="day" data-lang="contact.mon_fri">Montag – Freitag</span>
+                    <span class="time badge-open">07:00 – 18:00</span>
+                </div>
+                <div class="hours-row">
+                    <span class="day" data-lang="contact.saturday">Samstag</span>
+                    <span class="time">08:00 – 13:00</span>
+                </div>
+                <div class="hours-row">
+                    <span class="day" data-lang="contact.sunday">Sonntag</span>
+                    <span class="time" data-lang="contact.closed">Geschlossen</span>
+                </div>
+                <div class="hours-row">
+                    <span class="day" data-lang="contact.emergency_label">Notfall</span>
+                    <span class="time badge-open">24/7</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM -->
+        <div class="contact-form-full fade-in">
+            <h2 data-lang="contact.form_title">Schreiben Sie uns</h2>
+            <div class="title-underline left"></div>
+            <p data-lang="contact.form_sub">Füllen Sie das Formular aus. Wir antworten innerhalb eines Werktages.</p>
+            <div class="form-inner">
+                <form id="contactFormFull">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-lang="careers.f_firstname">Vorname</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-lang="careers.f_lastname">Nachname</label>
+                            <input type="text" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-lang="contact.email">E-Mail</label>
+                            <input type="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-lang="careers.f_phone">Telefon</label>
+                            <input type="tel">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang="contact.subject">Betreff</label>
+                        <select>
+                            <option data-lang="contact.subj1">Allgemeine Anfrage</option>
+                            <option data-lang="contact.subj2">Angebot anfordern</option>
+                            <option data-lang="contact.subj3">Sendungsverfolgung</option>
+                            <option data-lang="contact.subj4">Reklamation</option>
+                            <option data-lang="contact.subj5">Karriere / Bewerbung</option>
+                            <option data-lang="contact.subj6">Partnerschaft</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang="contact.message">Nachricht</label>
+                        <textarea rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary full-width" data-lang="contact.submit">Senden</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map-section">
+        <div id="locationMap"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>© 2026 Gelber LKW Transport S.à r.l. • Windhof, Luxemburg • <span data-lang="footer.allrights">Alle Rechte vorbehalten</span></p>
+        </div>
+    </footer>
+
+    <!-- TRACKING MODAL -->
+    <div id="trackingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideTrackingModal()">×</span>
+            <div class="modal-header">
+                <i class="fas fa-truck-fast"></i>
+                <h2 data-lang="tracking.modal_title">Sendung verfolgen</h2>
+            </div>
+            <div class="tracking-form-group">
+                <input type="text" id="modal-tracking-number" placeholder="GLK-20260430-837291" class="modal-input">
+                <br><br>
+                <button onclick="trackShipmentModal()" class="btn-primary full-width" data-lang="tracking.btn">Verfolgen</button>
+            </div>
+            <div id="modal-tracking-result" class="tracking-result hidden">
+                <div id="tracking-status-info"></div>
+                <div id="trackingMap" style="height: 300px; width: 100%; margin-top: 15px; border-radius: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.getElementById('navMenu');
+            mobileBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                const icon = mobileBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            document.getElementById('contactFormFull').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert(currentLang === 'en' ? 'Message sent! We will reply within one business day.' :
+                      currentLang === 'fr' ? 'Message envoyé ! Nous vous répondrons dans un jour ouvrable.' :
+                      'Nachricht gesendet! Wir antworten innerhalb eines Werktages.');
+                this.reset();
+            });
+
+            // Location map
+            const locMap = L.map('locationMap').setView([49.645, 5.958], 13);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+            }).addTo(locMap);
+            const marker = L.marker([49.645, 5.958]).addTo(locMap);
+            marker.bindPopup('<strong>Gelber LKW Transport</strong><br>12 Rue de l\'Industrie<br>L-8399 Windhof').openPopup();
+        });
+    </script>
+</body>
+</html>
