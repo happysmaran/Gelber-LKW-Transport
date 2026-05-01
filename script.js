@@ -2,6 +2,9 @@ let currentLang = localStorage.getItem('preferredLanguage') || 'de';
 let trackingMap = null;
 let currentMarker = null;
 
+// Only the common translations are stored here becuase otherise
+// this file would be too damn big! The rest of the translations
+// are stored in the HTML files themselves as data attributes.
 const translations = {
     de: {
         // Navigation & General
@@ -16,14 +19,14 @@ const translations = {
         
         // Home Page
         "hero.badge": "LUXEMBURG • EU • SEIT 2010",
-        "hero.title": "Ihr zuverlässiger Partner für <span class='highlight'>professionelle Logistik</span>",
+        "hero.title": "Ihr zuverlässiger Partner für <span id='slogan-text' class='highlight'>professionelle Logistik</span>",
         "hero.subtitle": "Gelber LKW Transport - Schnell. Sicher. Nachhaltig.<br>Von Luxemburg in die ganze Welt.",
         "hero.cta1": "Dienstleistungen entdecken",
         "hero.cta2": "Sendung verfolgen",
         "hero.stat1": "Fahrzeuge",
         "hero.stat2": "Support",
         "hero.stat3": "Länder",
-        "services.title": "Unsere Dienstleistungen",
+        "services.title": "Unsere <span class='highlight'>Dienstleistungen</span>",
         "services.subtitle": "Maßgeschneiderte Logistiklösungen für jeden Bedarf",
         "services.road": "Straßentransport",
         "services.road_desc": "Nationaler und internationaler Transport mit unserer modernen Euro 6+ zertifizierten LKW-Flotte.",
@@ -33,7 +36,7 @@ const translations = {
         "services.warehouse_desc": "Moderne Lagerflächen in Luxemburg mit Temperaturkontrolle.",
         "services.global": "Internationale Logistik",
         "services.global_desc": "Von Luxemburg nach Europa und weltweit - mit Zollabwicklung und temperaturgesteuerte Lagerung.",
-        "about.title": "Über Gelber LKW Transport",
+        "about.title": "Über <span class='highlight'>Gelber LKW Transport</span>",
         "about.p1": "Als luxemburgisches Familienunternehmen mit über 15 Jahren Erfahrung in der Logistikbranche stehen wir für Zuverlässigkeit, Präzision und Nachhaltigkeit.",
         "about.p2": "Was als kleines Transportunternehmen mit drei Fahrzeugen begann, ist heute eine internationale Flotte von über 150 modernen Scania-LKW, die täglich Waren quer durch Europa bewegen.",
         "about.value1": "Nachhaltigkeit",
@@ -196,14 +199,14 @@ const translations = {
         
         // Home Page
         "hero.badge": "LUXEMBOURG • EU • SINCE 2010",
-        "hero.title": "Your Reliable Partner for <span class='highlight'>Professional Logistics</span>",
+        "hero.title": "Your Reliable Partner for <span id='slogan-text' class='highlight'>Professional Logistics</span>",
         "hero.subtitle": "Gelber LKW Transport - Fast. Secure. Sustainable.<br>From Luxembourg to the world.",
         "hero.cta1": "Explore Services",
         "hero.cta2": "Track Shipment",
         "hero.stat1": "Vehicles",
         "hero.stat2": "Support",
         "hero.stat3": "Countries",
-        "services.title": "Our Services",
+        "services.title": "Our <span class='highlight'>Services</span>",
         "services.subtitle": "Tailored logistics solutions for every need",
         "services.road": "Road Freight",
         "services.road_desc": "National and international transport with our modern Euro 6+ certified truck fleet.",
@@ -213,7 +216,7 @@ const translations = {
         "services.warehouse_desc": "Modern storage spaces in Luxembourg with temperature control.",
         "services.global": "Global Logistics",
         "services.global_desc": "From Luxembourg to Europe and worldwide - including customs clearance and temperature-controlled warehousing.",
-        "about.title": "About Gelber LKW Transport",
+        "about.title": "About <span class='highlight'>Gelber LKW Transport</span>",
         "about.p1": "As a Luxembourg-based family business with over 15 years of experience in the logistics industry, we stand for reliability, precision, and sustainability.",
         "about.p2": "What started as a small transport company with three trucks has today become an international fleet of over 150 modern Scania trucks, moving goods across Europe daily.",
         "about.value1": "Sustainability",
@@ -376,14 +379,14 @@ const translations = {
         
         // Home Page
         "hero.badge": "LUXEMBOURG • UE • DEPUIS 2010",
-        "hero.title": "Votre partenaire fiable pour une <span class='highlight'>logistique professionnelle</span>",
+        "hero.title": "Votre partenaire fiable pour une <span id='slogan-text' class='highlight'>logistique professionnelle</span>",
         "hero.subtitle": "Gelber LKW Transport - Rapide. Sûr. Durable.<br>Du Luxembourg vers le monde entier.",
         "hero.cta1": "Découvrir les services",
         "hero.cta2": "Suivre l'envoi",
         "hero.stat1": "Véhicules",
         "hero.stat2": "Assistance",
         "hero.stat3": "Pays",
-        "services.title": "Nos Services",
+        "services.title": "Nos <span class='highlight'>Services</span>",
         "services.subtitle": "Des solutions logistiques sur mesure pour chaque besoin",
         "services.road": "Fret Routier",
         "services.road_desc": "Transport national et international avec notre flotte Euro 6+ certifiée.",
@@ -393,7 +396,7 @@ const translations = {
         "services.warehouse_desc": "Espaces de stockage modernes au Luxembourg sous température dirigée.",
         "services.global": "Logistique Internationale",
         "services.global_desc": "Du Luxembourg vers l'Europe et le monde entier - douane incluse et entreposage à température contrôlée.",
-        "about.title": "À Propos de Gelber LKW Transport",
+        "about.title": "À Propos de <span class='highlight'>Gelber LKW Transport</span>",
         "about.p1": "En tant qu'entreprise familiale luxembourgeoise avec plus de 15 ans d'expérience dans le secteur logistique, nous sommes synonymes de fiabilité, de précision et de durabilité.",
         "about.p2": "Ce qui a commencé comme une petite entreprise de transport avec trois camions est aujourd'hui une flotte internationale de plus de 150 camions Scania modernes, qui déplacent des marchandises à travers l'Europe quotidiennement.",
         "about.value1": "Durabilité",
@@ -692,6 +695,28 @@ window.addEventListener('storage', (event) => {
     }
 });
 
+const slogans = {
+    de: ["professionelle Logistik", "globalen Logistik", "schnelle Logistik", "nachhaltige Logistik"],
+    en: ["Professional Logistics", "Global Logistics", "Fast Logistics", "Sustainable Logistics"],
+    fr: ["Logistique Professionnelle", "Logistique Mondiale", "Logistique Rapide", "Logistique Durables"]
+};
+
+let sloganIndex = 0;
+
+function rotateSlogans() {
+    const sloganElement = document.getElementById('slogan-text');
+    if (!sloganElement) return;
+
+    sloganIndex = (sloganIndex + 1) % slogans[currentLang].length;
+    
+    sloganElement.style.opacity = 0;
+    
+    setTimeout(() => {
+        sloganElement.textContent = slogans[currentLang][sloganIndex];
+        sloganElement.style.opacity = 1;
+    }, 500);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     if (getCookie('cookieConsent') === 'denied') {
         localStorage.clear(); // Wipe it all
@@ -735,4 +760,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.fade-in').forEach(element => observer.observe(element));
+
+    setInterval(rotateSlogans, 3000);
 });

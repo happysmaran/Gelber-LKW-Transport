@@ -166,6 +166,12 @@ body {
     background: var(--light-bg);
 }
 
+.highlight {
+    color: var(--primary-dark);
+    transition: opacity 0.5s ease-in-out; /* Smoothly fades the slogan in and out */
+    display: inline-block; /* Ensures the opacity transition works correctly */
+}
+
 .hero-left {
     display: flex;
     align-items: center;
@@ -641,6 +647,9 @@ input:focus, textarea:focus {
         margin: 0 10px;
     }
 }
+
+/* Not all CSS is here because naming conventions make html files conflict */
+/* The rest of the CSS is in the HTML files themselves as style tags in head */
 
 /* COOKIE BANNER */
 #cookie-banner-container {
